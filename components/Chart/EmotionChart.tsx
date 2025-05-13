@@ -6,14 +6,14 @@ const screenWidth = Dimensions.get('window').width;
 
 const EmotionChart = () => {
   return (
-    <View className="mb-2.5">
+    <View className="mx-[20px]">
       {' '}
       {/* chartSection */}
       {/* Header */}
-      <View className="mx-5 mb-[15px] mt-5 flex-row items-center justify-between">
+      <View className="mb-[15px] flex-row items-center justify-between pt-7">
         {' '}
         {/* chartHeader */}
-        <Text className="pl-2.5 text-[18px] font-bold text-black">
+        <Text className="text-[18px] font-bold text-black">
           {' '}
           {/* chartTitle */}
           주간 감정 변화
@@ -30,7 +30,7 @@ const EmotionChart = () => {
         </TouchableOpacity>
       </View>
       {/* Chart Box */}
-      <View className="elevation-3 rounded-[12px] bg-white p-[13px] shadow-sm">
+      <View className="elevation-3 rounded-[15px] bg-white pb-[30px] shadow-sm">
         {/* chart */}
         <LineChart
           data={{
@@ -82,7 +82,7 @@ const EmotionChart = () => {
         />
       </View>
       {/* Legend */}
-      <View className="mr-[15px] mt-2.5 flex-row justify-end">
+      <View className="mt-2.5 flex-row justify-end">
         {' '}
         {/* legendContainer */}
         <View className="mx-2.5 flex-row items-center">

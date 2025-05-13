@@ -10,7 +10,7 @@ export default function Setting() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-[#f2f2f2] px-[15px] pb-[200px] pt-[40px]">
+    <ScrollView className="flex-1 bg-[#f2f2f2] px-[20px] pb-[200px] pt-[60px]">
       <View className="absolute bottom-0 h-[111px] w-full bg-white" />
 
       {/* 헤더 */}
@@ -97,7 +97,7 @@ export default function Setting() {
       </View>
 
       {/* 계정 관리 */}
-      <View className="mb-[10px] rounded-[12px] border border-[#eee] bg-[#f9f9f9] p-[14px]">
+      <View className="rounded-[12px] border border-[#eee] bg-[#f9f9f9] p-[14px]">
         <View className="mx-[2px] my-[7px] flex-row items-center gap-[7px]">
           <Ionicons name="person-circle-outline" size={23} />
           <Text className="text-[18px] font-bold">계정 관리</Text>

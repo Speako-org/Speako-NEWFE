@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Alert, Text, View, TouchableOpacity } from 'react-native';
 import { Audio } from 'expo-av';
 import { formatDateTime } from '../../../utils/formatDataTime';
 import { formatTime } from '../../../utils/formatTime';
@@ -85,6 +85,8 @@ export default function Home() {
         }
         const uri = recordingInstance.getURI();
         setRecordedUri(uri);
+        console.log('📍 녹음 파일 경로:', uri);
+
         setRecordingInstance(null);
         console.log('recordingInstance stopped and set to null');
       }
@@ -137,17 +139,17 @@ export default function Home() {
       <Text className="ml-[30px] self-start text-[28px] font-bold">음성 녹음</Text>
 
       <View className="mb-[10px] mt-[30px] w-[85%] flex-row justify-between">
-        <Text className="rounded-xl bg-[#e0e0e0] px-[12px] py-[5px] text-[#4a4a4a]">
+        <Text className="rounded-xl bg-[#e8e8e8] px-[12px] py-[5px] text-[#4a4a4a]">
           {formattedDate}
         </Text>
-        <Text className="rounded-xl bg-[#e0e0e0] px-[12px] py-[5px] text-[#4a4a4a]">
+        <Text className="rounded-xl bg-[#e8e8e8] px-[12px] py-[5px] text-[#4a4a4a]">
           {formattedTime}
         </Text>
       </View>
 
       <View
-        className={`elevation-4 relative mb-[100px] h-[200px] w-[85%] items-center justify-center rounded-[20px] px-[30px] shadow-sm ${
-          recording ? 'bg-white' : 'bg-[#f5f5f5]'
+        className={`elevation-4 shadow-xs relative mb-[100px] h-[200px] w-[85%] items-center justify-center rounded-[20px] px-[30px] ${
+          recording ? 'bg-white' : 'bg-[#f9f9f9]'
         }`}>
         {recording && <View className="absolute z-[-1] h-full w-full rounded-[10px] bg-white/80" />}
 
@@ -175,6 +177,20 @@ export default function Home() {
           {recording ? '한번 더 누를 시 중지됩니다.' : '버튼을 누르시면 음성이 기록됩니다.'}
         </Text>
       </View>
+
+      <TouchableOpacity
+        onPress={onPlayRecordedAudio}
+        disabled={!recordedUri}
+        style={{
+          paddingVertical: 10,
+          paddingHorizontal: 20,
+          backgroundColor: recordedUri ? '#a7cdfc' : '#cccccc',
+          borderRadius: 10,
+        }}>
+        <Text style={{ color: 'white', fontWeight: 'bold' }}>
+          {recordedUri ? '녹음 듣기 테스트' : '녹음 없음'}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

@@ -36,13 +36,13 @@ export default function RecordDate({ records }: RecordProps) {
 
   const handleRecordPress = (record: RecordType) => {
     router.push({
-      pathname: '/(protected)/(tabs)/record',
+      pathname: '/(protected)/record-detail',
       params: { record: JSON.stringify(record) },
     });
   };
 
   return (
-    <View className="h-[580px] px-[10px] py-[20px]">
+    <View className="mx-[28px] h-[580px] rounded-[15px] bg-white px-[10px] py-[20px]">
       {/* 날짜 이동 컨트롤 */}
       <View className="mx-[15px] my-[20px] flex-row items-center justify-between">
         <TouchableOpacity onPress={() => changeDate(-1)}>

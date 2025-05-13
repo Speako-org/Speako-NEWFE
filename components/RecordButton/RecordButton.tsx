@@ -1,7 +1,8 @@
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import recordingAnimation from '../../assets/recording.json';
+import { Audio } from 'expo-av';
 
 interface RecordButtonProps {
   recording: boolean;
@@ -10,13 +11,21 @@ interface RecordButtonProps {
 }
 
 const RecordButton: React.FC<RecordButtonProps> = ({ recording, onStartRecord, onStopRecord }) => {
+  const handlePress = async () => {
+    console.log('RecordButton pressed', recording);
+
+    const { granted } = await Audio.requestPermissionsAsync();
+    if (!granted) {
+      Alert.alert('권한 거부됨', '녹음을 위해 마이크 권한을 허용해주세요.');
+      return;
+    }
+
+    if (recording) onStopRecord();
+    else onStartRecord();
+  };
+
   return (
-    <TouchableOpacity
-      onPress={() => {
-        console.log('RecordButton pressed', recording);
-        if (recording) onStopRecord();
-        else onStartRecord();
-      }}>
+    <TouchableOpacity onPress={handlePress}>
       <View
         className="elevation-4 h-[60px] w-[60px] items-center justify-center rounded-full bg-[#c2d2ff] shadow-sm"
         style={{

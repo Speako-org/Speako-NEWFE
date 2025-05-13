@@ -12,11 +12,9 @@ export default function TabLayout() {
         headerShown: false,
         // @ts-ignore
         tabBarStyle: {
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
-          borderTopWidth: 1,
-          borderTopColor: '#C8C2C2',
-          height: 80,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          height: 110,
           backgroundColor: '#fff',
           position: 'absolute',
           bottom: 0,
@@ -28,7 +26,7 @@ export default function TabLayout() {
           marginTop: 4,
         },
         tabBarIconStyle: {
-          marginTop: 9,
+          marginTop: 10,
         },
         tabBarItemStyle: {
           flex: 1,

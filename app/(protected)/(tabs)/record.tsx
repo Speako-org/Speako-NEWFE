@@ -10,7 +10,7 @@ export default function Record() {
 
       {/* 상단 헤더 */}
       <View className="mb-5 px-[35px]">
-        <Text className="self-start text-[28px] font-bold">음성 기록</Text>
+        <Text className="self-start text-[33px] font-bold">음성 기록</Text>
       </View>
 
       {/* 기록 카드 */}

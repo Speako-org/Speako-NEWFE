@@ -10,7 +10,7 @@ export const Mypage = () => {
     <View className="flex-1 bg-white pt-[80px]">
       {/* Header */}
       <View className="flex-row items-center justify-between bg-white px-[25px] pb-5">
-        <Text className="text-[28px] font-bold text-black">마이페이지</Text>
+        <Text className="text-[33px] font-bold text-black">마이페이지</Text>
         <TouchableOpacity className="p-[5px]" onPress={() => router.push({ pathname: '/Setting' })}>
           <Ionicons name="settings-outline" size={24} color="#000" />
         </TouchableOpacity>

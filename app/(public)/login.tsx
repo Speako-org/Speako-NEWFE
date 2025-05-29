@@ -133,14 +133,16 @@ const LoginScreen = () => {
                   </View>
                 </View>
                 <TouchableOpacity
-                  className="mt-12 h-[60px] overflow-hidden rounded-2xl"
+                  className="mt-12 h-[40px] overflow-hidden rounded-2xl"
                   onPress={handleLogin}>
                   <LinearGradient
                     colors={['#94A0FF', '#D2B6FF']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    className="h-full items-center justify-center rounded-2xl">
-                    <Text className="text-center text-xl font-bold text-white">로그인</Text>
+                    className="flex-1 items-center justify-center">
+                    <Text className="h-[40px] text-center text-xl font-bold text-white">
+                      로그인
+                    </Text>
                   </LinearGradient>
                 </TouchableOpacity>
                 <View className="mt-4 flex-row justify-center">

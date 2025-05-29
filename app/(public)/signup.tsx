@@ -13,6 +13,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 type RootStackParamList = {
   Login: undefined;
@@ -23,6 +24,7 @@ type RootStackParamList = {
 type SignupScreenProps = NativeStackScreenProps<RootStackParamList, 'Signup'>;
 
 const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -155,21 +157,28 @@ const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
               </View>
             </View>
 
-            <TouchableOpacity
-              className="mt-2 w-full overflow-hidden rounded-xl"
-              onPress={handleSignUp}>
-              <LinearGradient
-                colors={['#94A0FF', '#D2B6FF']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                className="items-center rounded-xl py-4">
-                <Text className="text-base font-semibold text-white">회원가입</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+            <View className="flex-row justify-between">
+              <TouchableOpacity
+                className="h-[30px] w-full overflow-hidden rounded-xl"
+                onPress={handleSignUp}>
+                <LinearGradient
+                  colors={['#94A0FF', '#D2B6FF']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  className="flex-1 items-center justify-center rounded-xl">
+                  <Text className="text-base font-semibold text-white">회원가입</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
 
-            <View className="mt-5 flex-row">
+            <View className="flex-row">
               <Text className="mr-1 text-gray-500">계정이 있으신가요?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <TouchableOpacity
+                onPress={() =>
+                  router.replace({
+                    pathname: '/(public)/login',
+                  })
+                }>
                 <Text className="text-sm font-semibold text-[#8884FF]">로그인</Text>
               </TouchableOpacity>
             </View>

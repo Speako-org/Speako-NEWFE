@@ -14,20 +14,7 @@ import { useRouter } from 'expo-router';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
-
-const GradientText: React.FC<{ text: string; style?: string }> = ({ text, style }) => {
-  return (
-    <MaskedView maskElement={<Text className={style}>{text}</Text>}>
-      <LinearGradient
-        colors={['#94A0FF', '#D2B6FF', '#BF98FF']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        locations={[0, 0.5, 1]}>
-        <Text className={`${style} opacity-0`}>{text}</Text>
-      </LinearGradient>
-    </MaskedView>
-  );
-};
+import GradientText from '../../components/GradientText';
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -80,31 +67,31 @@ const LoginScreen = () => {
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}>
-          <View className="flex-1 justify-between px-8 pb-0 pt-24">
+          <View className="flex-1 justify-between px-6 pb-0 pt-24">
             <View>
               <View className="mb-3 mt-3 items-center">
-                <GradientText text="환영합니다" style="text-3xl font-bold mb-1" />
-                <Text className="mb-10 text-center text-base font-semibold leading-7 text-gray-400">
+                <GradientText text="환영합니다" style="text-2xl font-bold mb-1" />
+                <Text className="mb-10 text-center text-base leading-7 text-gray-400">
                   계정에 로그인하세요
                 </Text>
               </View>
               <View className="mb-20">
-                <Text className="text-m mb-3.5 font-medium text-gray-800">아이디</Text>
+                <Text className="mb-3.5 text-sm font-medium text-gray-800">아이디</Text>
                 <View className="mb-8 min-h-[50px] flex-row items-center border-b border-gray-200 pb-2">
                   <AntDesign name="user" size={20} color="#CECECE" className="mr-2.5" />
                   <TextInput
-                    className="text-m flex-1 text-gray-600"
+                    className="text-m flex-1 text-[#CECECE]"
                     placeholder="아이디를 입력하세요"
                     value={username}
                     onChangeText={setUsername}
                     autoCapitalize="none"
                   />
                 </View>
-                <Text className="text-m mb-3.5 font-medium text-gray-800">비밀번호</Text>
+                <Text className="mb-3.5 text-sm font-medium text-gray-800">비밀번호</Text>
                 <View className="mb-6 min-h-[50px] flex-row items-center border-b border-gray-200 pb-2">
                   <AntDesign name="lock" size={20} color="#CECECE" className="mr-2.5" />
                   <TextInput
-                    className="flex-1 text-base text-gray-600"
+                    className="text-m flex-1 text-[#CECECE]"
                     placeholder="비밀번호를 입력하세요"
                     value={password}
                     onChangeText={setPassword}
@@ -118,12 +105,12 @@ const LoginScreen = () => {
                       className="flex-row items-center"
                       onPress={() => setRememberMe(!rememberMe)}>
                       <View
-                        className={`mr-2 h-5 w-5 items-center justify-center rounded-md border border-gray-300 ${
+                        className={`mr-2 h-4 w-4 items-center justify-center rounded-md border border-gray-300 ${
                           rememberMe ? 'border-[#A8A3FF] bg-[#A8A3FF]' : ''
                         }`}>
                         {rememberMe && <Feather name="check" size={14} color="#FFFFFF" />}
                       </View>
-                      <Text className="text-sm text-gray-600">로그인 상태 유지</Text>
+                      <Text className="text-m text-gray-600">로그인 상태 유지</Text>
                     </TouchableOpacity>
                     <TouchableOpacity>
                       <Text className="text-m mr-1.5 font-medium text-[#A8A3FF]">
@@ -133,14 +120,14 @@ const LoginScreen = () => {
                   </View>
                 </View>
                 <TouchableOpacity
-                  className="mt-12 h-[60px] overflow-hidden rounded-2xl"
+                  className="mt-12 h-[60px] overflow-hidden rounded-xl"
                   onPress={handleLogin}>
                   <LinearGradient
                     colors={['#94A0FF', '#D2B6FF']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    className="h-full items-center justify-center rounded-2xl">
-                    <Text className="text-center text-xl font-bold text-white">로그인</Text>
+                    className="h-full items-center justify-center rounded-xl">
+                    <Text className="text-center text-base font-bold text-white">로그인</Text>
                   </LinearGradient>
                 </TouchableOpacity>
                 <View className="mt-4 flex-row justify-center">
@@ -168,7 +155,7 @@ const LoginScreen = () => {
                   source={require('../../assets/pngwing.com.png')}
                   style={{ width: 18, height: 18, marginRight: 10 }}
                 />
-                <Text className="text-base font-semibold text-gray-700">카카오로 시작하기</Text>
+                <Text className="text-m font-semibold text-gray-700">카카오로 시작하기</Text>
               </TouchableOpacity>
             </View>
           </View>

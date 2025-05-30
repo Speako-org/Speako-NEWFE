@@ -71,7 +71,7 @@ const LoginScreen = () => {
             <View>
               <View className="mb-3 mt-3 items-center">
                 <GradientText text="환영합니다" style="text-2xl font-bold mb-1" />
-                <Text className="mb-10 text-center text-base leading-7 text-gray-400">
+                <Text className="mb-10 text-center text-base leading-7 text-gray-500">
                   계정에 로그인하세요
                 </Text>
               </View>

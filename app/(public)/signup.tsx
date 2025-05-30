@@ -63,9 +63,7 @@ const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6">
           <View className="mt-12 flex-1 items-center justify-center">
             <GradientText text="회원가입" style="mt-5 text-center text-[30px] font-bold mb-1" />
-            <Text className="mb-8 text-base font-semibold leading-7 text-gray-600">
-              계정을 생성하세요!
-            </Text>
+            <Text className="mb-8 text-base leading-7 text-gray-500">계정을 생성하세요!</Text>
             <View className="mb-1 w-[98%]">
               <Text className="mb-1 mt-3 text-sm font-medium text-[#333]">아이디*</Text>
               <View
@@ -186,7 +184,7 @@ const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
 
             <View className="mt-5 flex-row">
               <Text className="mr-1 text-gray-500">계정이 있으신가요?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <TouchableOpacity onPress={() => router.push({ pathname: '/(public)/login' })}>
                 <Text className="text-sm font-semibold text-[#8884FF]">로그인</Text>
               </TouchableOpacity>
             </View>

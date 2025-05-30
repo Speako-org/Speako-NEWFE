@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 탭바 아이템 수직 정렬 강제 적용 */
+div[class*='tab-bar-item'] {
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}

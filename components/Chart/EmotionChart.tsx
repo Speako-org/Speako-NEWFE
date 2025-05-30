@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Pressable, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
 
@@ -7,31 +7,17 @@ const screenWidth = Dimensions.get('window').width;
 const EmotionChart = () => {
   return (
     <View className="mx-[20px]">
-      {' '}
-      {/* chartSection */}
       {/* Header */}
       <View className="mb-[15px] flex-row items-center justify-between pt-7">
-        {' '}
-        {/* chartHeader */}
-        <Text className="text-[18px] font-bold text-black">
-          {' '}
-          {/* chartTitle */}
-          주간 감정 변화
-        </Text>
-        <TouchableOpacity className="flex-row items-center pr-2.5">
-          {' '}
-          {/* periodButton */}
-          <Text className="mr-1.5 text-[14px] text-gray-500">
-            {' '}
-            {/* periodText */}
-            최근 5개월
-          </Text>
+        <Text className="text-[18px] font-bold text-black">주간 감정 변화</Text>
+        <Pressable className="flex-row items-center pr-2.5">
+          <Text className="mr-1.5 text-[14px] text-gray-500">최근 5개월</Text>
           <Ionicons name="chevron-down" size={16} color="#666" />
-        </TouchableOpacity>
+        </Pressable>
       </View>
+
       {/* Chart Box */}
       <View className="elevation-3 rounded-[15px] bg-white pb-[30px] shadow-sm">
-        {/* chart */}
         <LineChart
           data={{
             labels: ['1월', '2월', '3월', '4월', '5월'],
@@ -81,21 +67,16 @@ const EmotionChart = () => {
           bezier={false}
         />
       </View>
+
       {/* Legend */}
       <View className="mt-2.5 flex-row justify-end">
-        {' '}
-        {/* legendContainer */}
         <View className="mx-2.5 flex-row items-center">
-          {' '}
-          {/* legendItem */}
-          <View className="mr-1.5 h-2 w-2 rounded-full bg-[#A088E0]" /> {/* legendDot */}
-          <Text className="text-[12px] text-gray-500">긍정적 표현</Text> {/* legendText */}
+          <View className="mr-1.5 h-2 w-2 rounded-full bg-[#A088E0]" />
+          <Text className="text-[12px] text-gray-500">긍정적 표현</Text>
         </View>
         <View className="mx-2.5 flex-row items-center">
-          {' '}
-          {/* legendItem */}
-          <View className="mr-1.5 h-2 w-2 rounded-full bg-[#FF928A]" /> {/* legendDot */}
-          <Text className="text-[12px] text-gray-500">부정적 표현</Text> {/* legendText */}
+          <View className="mr-1.5 h-2 w-2 rounded-full bg-[#FF928A]" />
+          <Text className="text-[12px] text-gray-500">부정적 표현</Text>
         </View>
       </View>
     </View>

@@ -10,6 +10,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: 'black',
         headerShown: false,
+
         // @ts-ignore
         tabBarStyle: {
           borderTopLeftRadius: 20,
@@ -26,12 +27,13 @@ export default function TabLayout() {
           marginTop: 4,
         },
         tabBarIconStyle: {
-          marginTop: 10,
+          marginTop: 15,
         },
         tabBarItemStyle: {
           flex: 1,
           marginHorizontal: -8,
           paddingHorizontal: 0,
+          flexDirection: 'column',
         },
       }}>
       <Tabs.Screen

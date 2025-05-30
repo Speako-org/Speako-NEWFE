@@ -298,7 +298,7 @@ export default function Home() {
         />
 
         <Text
-          className="mt-5 pt-[20px] text-[15px] font-semibold leading-6 tracking-[0.5px] text-[#888]"
+          className="pt-[20px] text-[15px] font-medium  tracking-[0.5px] text-[#888]"
           style={{
             shadowColor: '#000',
             shadowOpacity: 0.1,

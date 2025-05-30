@@ -3,14 +3,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import EmotionChart from '../../../components/Chart/EmotionChart';
 
-export const Mypage = () => {
+const Mypage = () => {
   const router = useRouter();
 
   return (
     <View className="flex-1 bg-white pt-[80px]">
       {/* Header */}
       <View className="flex-row items-center justify-between bg-white px-[25px] pb-5">
-        <Text className="text-[33px] font-bold text-black">마이페이지</Text>
+        <Text className="text-[28px] font-bold text-black">마이페이지</Text>
         <TouchableOpacity className="p-[5px]" onPress={() => router.push({ pathname: '/Setting' })}>
           <Ionicons name="settings-outline" size={24} color="#000" />
         </TouchableOpacity>

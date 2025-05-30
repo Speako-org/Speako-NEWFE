@@ -7,19 +7,19 @@ const Mypage = () => {
   const router = useRouter();
 
   return (
-    <View className="flex-1 bg-white pt-[80px]">
+    <View className="flex-1 pt-[80px]">
       {/* Header */}
-      <View className="flex-row items-center justify-between bg-white px-[25px] pb-5">
+      <View className="flex-row items-center justify-between px-[25px] pb-5">
         <Text className="text-[28px] font-bold text-black">마이페이지</Text>
-        <TouchableOpacity className="p-[5px]" onPress={() => router.push({ pathname: '/Setting' })}>
+        <TouchableOpacity
+          className="p-[5px]"
+          onPress={() => router.push({ pathname: '/(protected)/Setting' })}>
           <Ionicons name="settings-outline" size={24} color="#000" />
         </TouchableOpacity>
       </View>
 
       {/* Profile Section */}
-      <View
-        className="elevation-3 mx-[20px] mb-[10px] mt-[15px] rounded-[10px] border border-[#fff] px-[15px] pt-5"
-        style={{ borderWidth: 1, borderColor: '#ddd' }}>
+      <View className="elevation-3 mx-[20px] mb-[10px] mt-[15px] rounded-[10px] bg-white px-[15px] pt-5">
         {/* Profile Info */}
         <View className="mb-5 flex-row items-center">
           <Image

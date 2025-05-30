@@ -264,9 +264,9 @@ export default function Home() {
   const { formattedDate, formattedTime } = formatDateTime(currentDateTime);
 
   return (
-    <View className="relative flex-1 items-center justify-center bg-[#f2f2f2]">
+    <View className="relative flex-1 items-center justify-center">
       {recording && <View className="absolute inset-0 z-10 bg-black/50" pointerEvents="none" />}
-      <View className="absolute bottom-0 h-[111px] w-full bg-white" />
+      <View className="absolute bottom-0 h-[111px] w-full" />
 
       <Text className="ml-[30px] self-start text-[33px] font-bold">음성 녹음</Text>
 

@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, TouchableOpacity, Switch } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -124,7 +124,18 @@ export default function Setting() {
         </View>
 
         {/* 로그아웃 */}
-        <TouchableOpacity className="flex-row items-center gap-[6px] px-[5px] py-[10px]">
+        <TouchableOpacity
+          className="flex-row items-center gap-[6px] px-[5px] py-[10px]"
+          onPress={() => {
+            Alert.alert('로그아웃', '로그아웃을 하시겠습니까?', [
+              { text: '취소', style: 'cancel' },
+              {
+                text: '확인',
+                style: 'destructive',
+                onPress: () => router.replace({ pathname: '/(public)/login' }),
+              },
+            ]);
+          }}>
           <Ionicons name="log-out-outline" size={16} color="#e53935" />
           <Text className="text-[16px] font-semibold text-[#e53935]">로그아웃</Text>
         </TouchableOpacity>

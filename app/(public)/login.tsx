@@ -9,54 +9,65 @@ import {
   Platform,
   Image,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import MaskedView from '@react-native-masked-view/masked-view';
 import GradientText from '../../components/GradientText';
 
 const LoginScreen = () => {
   const router = useRouter();
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
-  // const handleLogin = async () => {
-  //   try {
-  //     const response = await fetch('http://localhost:3000/api/auth/login', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         username: username,
-  //         password: password,
-  //       }),
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       // 로그인 성공 시 홈 화면으로 이동
-  //       router.replace({
-  //         pathname: '/(protected)/(tabs)/home',
-  //       });
-  //     } else {
-  //       // 로그인 실패 시 에러 메시지 표시
-  //       Alert.alert('로그인 실패', '아이디 또는 비밀번호를 확인해주세요.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Login error:', error);
-  //     Alert.alert('오류', '로그인 중 문제가 발생했습니다.');
-  //   }
-  // };
-
-  const handleLogin = () => {
-    // 임시로 홈 화면으로 이동
-    router.replace({
-      pathname: '/(protected)/(tabs)/home',
-    });
+  const handleLogin = async () => {
+    setErrors({});
+    setIsLoading(true);
+    try {
+      // 유효성 검사
+      if (!email) {
+        setErrors((prev) => ({ ...prev, email: '이메일을 입력하세요' }));
+        setIsLoading(false);
+        return;
+      }
+      if (!password) {
+        setErrors((prev) => ({ ...prev, password: '비밀번호를 입력하세요' }));
+        setIsLoading(false);
+        return;
+      }
+      const response = await fetch('https://speako.site/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      if (response.ok) {
+        // 로그인 성공 시 홈 화면으로 이동
+        router.replace({ pathname: '/(protected)/(tabs)/home' });
+      } else {
+        const data = await response.json();
+        // 백엔드에서 에러 메시지에 따라 분기
+        if (data.message && data.message.includes('not found')) {
+          setErrors((prev) => ({ ...prev, email: '등록된 회원이 아닙니다' }));
+        } else if (data.message && data.message.includes('password')) {
+          setErrors((prev) => ({ ...prev, password: '올바른 비밀번호가 아닙니다' }));
+        } else {
+          Alert.alert('로그인 실패', '아이디 또는 비밀번호를 확인해주세요.');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('오류', '로그인 중 문제가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
@@ -70,29 +81,39 @@ const LoginScreen = () => {
           <View className="flex-1 justify-between px-6 pb-0 pt-24">
             <View>
               <View className="mb-3 mt-3 items-center">
-                <GradientText text="환영합니다" style="text-2xl font-bold mb-1" />
+                <GradientText text="환영합니다" style="text-3xl font-bold mb-1" />
                 <Text className="mb-10 text-center text-base leading-7 text-gray-500">
                   계정에 로그인하세요
                 </Text>
               </View>
               <View className="mb-20">
-                <Text className="mb-3.5 text-sm font-medium text-gray-800">아이디</Text>
+                <View className="flex-row items-center justify-between">
+                  <Text className="mb-3.5 mt-1 text-sm font-medium text-gray-800">아이디</Text>
+                  {errors.email && <Text className="text-xs text-red-500">{errors.email}</Text>}
+                </View>
                 <View className="mb-8 min-h-[50px] flex-row items-center border-b border-gray-200 pb-2">
                   <AntDesign name="user" size={20} color="#CECECE" className="mr-2.5" />
                   <TextInput
-                    className="text-m flex-1 text-[#CECECE]"
+                    className="text-m flex-1 text-[#333]"
                     placeholder="아이디를 입력하세요"
-                    value={username}
-                    onChangeText={setUsername}
+                    placeholderTextColor="#CECECE"
+                    value={email}
+                    onChangeText={setEmail}
                     autoCapitalize="none"
                   />
                 </View>
-                <Text className="mb-3.5 text-sm font-medium text-gray-800">비밀번호</Text>
+                <View className="flex-row items-center justify-between">
+                  <Text className="mb-3.5 text-sm font-medium text-gray-800">비밀번호</Text>
+                  {errors.password && (
+                    <Text className="text-xs text-red-500">{errors.password}</Text>
+                  )}
+                </View>
                 <View className="mb-6 min-h-[50px] flex-row items-center border-b border-gray-200 pb-2">
                   <AntDesign name="lock" size={20} color="#CECECE" className="mr-2.5" />
                   <TextInput
-                    className="text-m flex-1 text-[#CECECE]"
+                    className="text-m flex-1 text-[#333]"
                     placeholder="비밀번호를 입력하세요"
+                    placeholderTextColor="#CECECE"
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
@@ -120,14 +141,27 @@ const LoginScreen = () => {
                   </View>
                 </View>
                 <TouchableOpacity
-                  className="mt-12 h-[60px] overflow-hidden rounded-2xl"
-                  onPress={handleLogin}>
+                  style={{
+                    height: 50,
+                    width: '100%',
+                    borderRadius: 10,
+                    overflow: 'hidden',
+                    marginTop: 48,
+                  }}
+                  onPress={handleLogin}
+                  disabled={isLoading}>
                   <LinearGradient
                     colors={['#94A0FF', '#D2B6FF']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    className="rounded- h-full items-center justify-center">
-                    <Text className="text-center text-base font-bold text-white">로그인</Text>
+                    style={{
+                      height: 50,
+                      width: '100%',
+                      borderRadius: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>로그인</Text>
                   </LinearGradient>
                 </TouchableOpacity>
                 <View className="mt-4 flex-row justify-center">

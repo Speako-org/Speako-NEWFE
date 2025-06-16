@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   SafeAreaView,
   KeyboardAvoidingView,
@@ -51,13 +51,45 @@ const LoginScreen = () => {
         router.replace({ pathname: '/(protected)/(tabs)/home' });
       } else {
         const data = await response.json();
-        // 백엔드에서 에러 메시지에 따라 분기
+
         if (data.message && data.message.includes('not found')) {
           setErrors((prev) => ({ ...prev, email: '등록된 회원이 아닙니다' }));
         } else if (data.message && data.message.includes('password')) {
           setErrors((prev) => ({ ...prev, password: '올바른 비밀번호가 아닙니다' }));
         } else {
           Alert.alert('로그인 실패', '아이디 또는 비밀번호를 확인해주세요.');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('오류', '로그인 중 문제가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKakaoLogin = async () => {
+    try {
+      setIsLoading(true);
+
+      const response = await fetch('https://speako.site/api/auth/kakao/token', {
+        method: 'GET',
+      });
+
+      if (response.ok) {
+        // 액세스 토큰이 있으면 바로 로그인
+        router.replace({ pathname: '/(protected)/(tabs)/home' });
+      } else {
+        // 액세스 토큰이 없으면 카카오 로그인 페이지로 이동
+        const loginResponse = await fetch('https://speako.site/oauth2/authorization/kakao', {
+          method: 'GET',
+        });
+
+        if (loginResponse.ok) {
+          router.replace({ pathname: '/(protected)/(tabs)/home' });
+        } else {
+          const data = await loginResponse.json();
+          Alert.alert('로그인 실패', data.message || '카카오 로그인에 실패했습니다.');
         }
       }
     } catch (error) {
@@ -184,12 +216,14 @@ const LoginScreen = () => {
                 <Text className="mx-2.5 text-sm text-gray-400">간편 로그인</Text>
                 <View className="h-px flex-1 bg-gray-200" />
               </View>
-              <TouchableOpacity className="h-14 flex-row items-center justify-center rounded-lg bg-[#FEE500]">
+              <TouchableOpacity
+                className="h-14 flex-row items-center justify-center rounded-lg bg-[#FEE500]"
+                onPress={handleKakaoLogin}>
                 <Image
                   source={require('../../assets/pngwing.com.png')}
                   style={{ width: 18, height: 18, marginRight: 10 }}
                 />
-                <Text className="text-sm font-semibold text-gray-700">카카오로 시작하기</Text>
+                <Text className="text-sm font-semibold text-gray-700">카카오로 로그인</Text>
               </TouchableOpacity>
             </View>
           </View>

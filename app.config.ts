@@ -20,6 +20,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     bundleIdentifier: 'com.anonymous.Speako',
     infoPlist: {
       NSMicrophoneUsageDescription: '이 앱은 음성 녹음을 위해 마이크 접근이 필요합니다.',
+      LSApplicationQueriesSchemes: ['kakaokompassauth', 'kakaolink'],
     },
   },
   android: {
@@ -28,6 +29,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#ffffff',
     },
     package: 'com.amu601.nativewind',
+    intentFilters: [
+      {
+        action: 'android.intent.action.VIEW',
+        data: [
+          {
+            scheme: 'kakao',
+            host: 'oauth',
+          },
+        ],
+        category: ['android.intent.category.DEFAULT', 'android.intent.category.BROWSABLE'],
+      },
+    ],
   },
   web: {
     bundler: 'metro',

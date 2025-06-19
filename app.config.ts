@@ -2,10 +2,10 @@ import { ExpoConfig, ConfigContext } from '@expo/config';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: 'nativewind',
-  slug: 'nativewind',
+  name: 'Speako',
+  slug: 'Speako',
   version: '1.0.0',
-  scheme: 'nativewind',
+  scheme: 'Speako',
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'light',
@@ -44,7 +44,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   web: {
     bundler: 'metro',
-    output: 'static',
+    output: 'single',
     favicon: './assets/favicon.png',
   },
   plugins: [

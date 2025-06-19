@@ -15,4 +15,7 @@ config.server = {
   port: 8080,
 };
 
+// 웹 환경에서 import.meta 문제 해결을 위한 설정
+config.resolver.platforms = ['ios', 'android', 'native', 'web'];
+
 module.exports = withNativeWind(config, { input: './global.css' });

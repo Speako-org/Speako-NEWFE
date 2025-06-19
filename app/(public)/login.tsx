@@ -14,6 +14,7 @@ import {
 import { useRouter } from 'expo-router';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as SecureStore from 'expo-secure-store';
 import GradientText from '../../components/GradientText';
 
 const LoginScreen = () => {
@@ -47,6 +48,31 @@ const LoginScreen = () => {
         body: JSON.stringify({ email, password }),
       });
       if (response.ok) {
+        const data = await response.json();
+        console.log('Login response:', data);
+
+        // 토큰이 응답 헤더에 있는 경우
+        const token = response.headers.get('Authorization')?.split(' ')[1] || data.accessToken;
+
+        if (token) {
+          // Expo SecureStore에 저장 (암호화된 저장소)
+          await SecureStore.setItemAsync('accessToken', token);
+
+          // 웹 환경에서도 지원
+          if (typeof window !== 'undefined') {
+            // localStorage와 sessionStorage에 저장
+            localStorage.setItem('accessToken', token);
+            sessionStorage.setItem('accessToken', token);
+
+            // 쿠키에도 저장
+            document.cookie = `accessToken=${token}; path=/; SameSite=None; Secure`;
+
+            console.log('토큰 저장에 성공하였습니다.');
+          }
+        } else {
+          console.error('토큰이 없습니다.');
+        }
+
         // 로그인 성공 시 홈 화면으로 이동
         router.replace({ pathname: '/(protected)/(tabs)/home' });
       } else {
@@ -72,28 +98,12 @@ const LoginScreen = () => {
     try {
       setIsLoading(true);
 
-      const response = await fetch('https://speako.site/api/auth/kakao/token', {
-        method: 'GET',
-      });
-
-      if (response.ok) {
-        // 액세스 토큰이 있으면 바로 로그인
-        router.replace({ pathname: '/(protected)/(tabs)/home' });
-      } else {
-        // 액세스 토큰이 없으면 카카오 로그인 페이지로 이동
-        const loginResponse = await fetch('https://speako.site/oauth2/authorization/kakao', {
-          method: 'GET',
-        });
-
-        if (loginResponse.ok) {
-          router.replace({ pathname: '/(protected)/(tabs)/home' });
-        } else {
-          const data = await loginResponse.json();
-          Alert.alert('로그인 실패', data.message || '카카오 로그인에 실패했습니다.');
-        }
-      }
+      // 카카오 로그인 페이지로 리다이렉트 (콜백 URL 포함)
+      const callbackUrl = encodeURIComponent(`${window.location.origin}/(public)/kakao-callback`);
+      const loginUrl = `https://speako.site/oauth2/authorization/kakao?redirect_uri=${callbackUrl}`;
+      window.location.href = loginUrl;
     } catch (error) {
-      console.error(error);
+      console.error('Kakao login error:', error);
       Alert.alert('오류', '로그인 중 문제가 발생했습니다.');
     } finally {
       setIsLoading(false);

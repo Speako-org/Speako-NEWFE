@@ -98,9 +98,23 @@ const LoginScreen = () => {
     try {
       setIsLoading(true);
 
+      // 현재 도메인과 프로토콜을 정확히 가져오기
+      const protocol = window.location.protocol;
+      const host = window.location.host;
+      const baseUrl = `${protocol}//${host}`;
+
       // 카카오 로그인 페이지로 리다이렉트 (콜백 URL 포함)
-      const callbackUrl = encodeURIComponent(`${window.location.origin}/(public)/kakao-callback`);
+      const callbackUrl = encodeURIComponent(`${baseUrl}/(public)/kakao-callback`);
       const loginUrl = `https://speako.site/oauth2/authorization/kakao?redirect_uri=${callbackUrl}`;
+
+      console.log('Kakao login URL:', loginUrl);
+      console.log('Callback URL:', callbackUrl);
+      console.log('Current location:', window.location.href);
+      console.log('Base URL:', baseUrl);
+
+      // 페이지 이동 전에 현재 상태 로깅
+      console.log('Redirecting to Kakao login...');
+
       window.location.href = loginUrl;
     } catch (error) {
       console.error('Kakao login error:', error);

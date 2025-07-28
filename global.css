@@ -2,9 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Pretendard 폰트 CDN */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+
+/* 기본 폰트 설정 */
+* {
+  font-family: 'Pretendard-Regular', 'Pretendard', system-ui, sans-serif;
+}
+
+/* 다크모드 설정 */
+:root {
+  color-scheme: light;
+}
+
 /* 탭바 아이템 수직 정렬 강제 적용 */
 div[class*='tab-bar-item'] {
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+/* 웹에서 터치 이벤트 경고 억제 */
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

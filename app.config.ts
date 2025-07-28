@@ -46,6 +46,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     bundler: 'metro',
     output: 'single',
     favicon: './assets/favicon.png',
+    build: {
+      babel: {
+        include: ['react-native-reanimated'],
+      },
+    },
   },
   plugins: [
     'expo-router',

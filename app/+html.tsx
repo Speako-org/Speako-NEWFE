@@ -11,6 +11,8 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <title>Speako</title>
+        <link rel="icon" type="image/png" href="/assets/favicon.png" />
+        <link rel="shortcut icon" type="image/png" href="/assets/favicon.png" />
 
         {/*
           This viewport disables scaling which makes the mobile website act more like a native app.

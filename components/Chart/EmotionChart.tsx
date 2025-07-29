@@ -28,12 +28,12 @@ const EmotionChart = () => {
     labels: ['1월', '2월', '3월', '4월', '5월'],
     datasets: [
       {
-        data: [80, 45, 60, 20, 10],
+        data: [80, 40, 60, 20, 0],
         color: (opacity = 1) => `rgba(160, 136, 224, ${opacity})`,
         strokeWidth: 2,
       },
       {
-        data: [20, 70, 40, 80, 90],
+        data: [20, 60, 40, 80, 100],
         color: (opacity = 1) => `rgba(255, 146, 138, ${opacity})`,
         strokeWidth: 2,
       },
@@ -54,16 +54,16 @@ const EmotionChart = () => {
 
       {/* Chart Box */}
       <View
-        className="elevation-3 rounded-[15px] bg-white pb-[30px] shadow-sm"
+        className="elevation-3 rounded-[15px] bg-white px-4 pb-[20px] shadow-sm"
         style={{
-          minHeight: 220,
+          minHeight: 250,
           alignItems: 'center',
           justifyContent: 'center',
         }}>
         <LineChart
           data={chartData}
           width={chartWidth}
-          height={220}
+          height={250}
           chartConfig={{
             backgroundColor: '#fff',
             backgroundGradientFrom: '#fff',
@@ -79,13 +79,15 @@ const EmotionChart = () => {
               stroke: '#fff',
             },
             propsForLabels: {
-              fontSize: 12,
+              fontSize: 14,
             },
             propsForBackgroundLines: {
               strokeDasharray: [],
             },
             backgroundGradientFromOpacity: 0,
             backgroundGradientToOpacity: 0,
+            paddingRight: 50,
+            paddingTop: 50,
           }}
           withHorizontalLines={false}
           withVerticalLines={false}
@@ -94,13 +96,13 @@ const EmotionChart = () => {
           bezier={false}
           onDataPointClick={() => {}}
           style={{
-            marginVertical: 8,
+            marginVertical: 4,
             borderRadius: 12,
           }}
           fromZero={true}
           yAxisSuffix=""
-          yAxisInterval={20}
           segments={5}
+          yAxisInterval={1}
           getDotColor={(dataPoint, index) => {
             if (index === 0) return 'rgba(160, 136, 224, 1)';
             if (index === 1) return 'rgba(255, 146, 138, 1)';

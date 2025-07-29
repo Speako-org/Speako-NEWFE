@@ -48,33 +48,33 @@ export default function SocialScreen() {
         <View className="mr-3 h-10 w-10 rounded-full bg-gray-300" />
         <View className="flex-1">
           <View className="flex-row items-center">
-            <Text className="mr-2 text-base font-semibold">{post.userName}</Text>
+            <Text className="mr-2 text-lg font-semibold">{post.userName}</Text>
             <View className="rounded-full bg-purple-100 px-2 py-1">
               <Text className="text-xs text-purple-600">{post.badge}</Text>
             </View>
           </View>
-          <Text className="text-sm text-gray-500">{post.timeAgo}</Text>
+          <Text className="text-base text-gray-500">{post.timeAgo}</Text>
         </View>
       </View>
 
       {/* 내용 */}
-      <Text className="mb-3 text-sm leading-5">{post.content}</Text>
+      <Text className="mb-3 text-base leading-6">{post.content}</Text>
 
       {/* before/after */}
       <View className="mb-3 rounded-lg bg-gray-50 p-3">
         <View className="mb-1 flex-row items-center">
-          <Text style={{ color: '#DF3A3A' }} className="mr-2 text-xs font-medium">
+          <Text style={{ color: '#DF3A3A' }} className="mr-2 text-sm font-medium">
             Before:
           </Text>
-          <Text style={{ color: '#ADADAD' }} className="text-xs line-through">
+          <Text style={{ color: '#ADADAD' }} className="text-sm line-through">
             {post.before}
           </Text>
         </View>
         <View className="flex-row items-center">
-          <Text style={{ color: '#62C059' }} className="mr-2 text-xs font-medium">
+          <Text style={{ color: '#62C059' }} className="mr-2 text-sm font-medium">
             After:
           </Text>
-          <Text style={{ color: '#000000' }} className="text-xs">
+          <Text style={{ color: '#000000' }} className="text-sm">
             {post.after}
           </Text>
         </View>
@@ -83,13 +83,13 @@ export default function SocialScreen() {
       {/* before/after 이미지 자리 표시 */}
       <View className="mb-3 flex-row justify-center">
         <View className="mr-8 items-center">
-          <Text style={{ color: '#DF3A3A' }} className="mb-1 text-sm font-semibold">
+          <Text style={{ color: '#DF3A3A' }} className="mb-1 text-base font-semibold">
             Before
           </Text>
           <View className="h-16 w-16 rounded-full border-2 border-gray-300" />
         </View>
         <View className="items-center">
-          <Text style={{ color: '#62C059' }} className="mb-1 text-sm font-semibold">
+          <Text style={{ color: '#62C059' }} className="mb-1 text-base font-semibold">
             After
           </Text>
           <View className="h-16 w-16 rounded-full border-2 border-gray-300" />
@@ -106,13 +106,13 @@ export default function SocialScreen() {
             size={24}
             color={post.isLiked ? '#EF4444' : '#6B7280'}
           />
-          <Text className="ml-2 text-base text-gray-600">{post.likes}</Text>
+          <Text className="ml-2 text-lg text-gray-600">{post.likes}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           className="mr-4 flex-row items-center"
           onPress={() => handleCommentPress(post.id)}>
           <Ionicons name="chatbubble-outline" size={24} color="#6B7280" />
-          <Text className="ml-2 text-base text-gray-600">{post.comments}</Text>
+          <Text className="ml-2 text-lg text-gray-600">{post.comments}</Text>
         </TouchableOpacity>
         <TouchableOpacity>
           <Ionicons name="paper-plane-outline" size={24} color="#6B7280" />
@@ -125,7 +125,7 @@ export default function SocialScreen() {
     <SafeAreaView className="flex-1 bg-white">
       {/* 헤더 */}
       <View className="px-6 pb-6 pt-12">
-        <Text className="mb-6 text-2xl font-bold">소셜</Text>
+        <Text className="mb-6 text-3xl font-bold">소셜</Text>
 
         {/* 탭 */}
         <View className="flex-row rounded-xl bg-gray-100 p-1">
@@ -139,8 +139,8 @@ export default function SocialScreen() {
             <Text
               className={
                 activeTab === 'feed'
-                  ? 'text-center font-medium text-white'
-                  : 'text-center font-medium text-gray-500'
+                  ? 'text-center text-lg font-medium text-white'
+                  : 'text-center text-lg font-medium text-gray-500'
               }>
               피드
             </Text>
@@ -155,8 +155,8 @@ export default function SocialScreen() {
             <Text
               className={
                 activeTab === 'friends'
-                  ? 'text-center font-medium text-white'
-                  : 'text-center font-medium text-gray-500'
+                  ? 'text-center text-lg font-medium text-white'
+                  : 'text-center text-lg font-medium text-gray-500'
               }>
               친구
             </Text>

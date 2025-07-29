@@ -121,19 +121,34 @@ const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
         Female: 'Female',
         None: 'Other',
       };
+
+      const requestData = {
+        ...formData,
+        gender: genderMap[formData.gender] || 'Other',
+      };
+
+      console.log('회원가입 요청 시작');
+
+      // 직접 API 호출
       const response = await fetch('https://speako.site/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          gender: genderMap[formData.gender] || 'Other',
-        }),
+        body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
-        throw new Error('회원가입에 실패했습니다.');
+        console.error('회원가입 실패 - 상태코드:', response.status);
+
+        // 409 에러
+        if (response.status === 409) {
+          Alert.alert('중복 오류', '이미 가입된 이메일이거나 사용 중인 사용자명입니다.');
+          return;
+        }
+
+        throw new Error(`회원가입에 실패했습니다. (${response.status})`);
       }
 
       // 성공 시 로그인 페이지로 이동
@@ -144,10 +159,17 @@ const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
         },
       ]);
     } catch (error) {
-      Alert.alert(
-        '오류',
-        error instanceof Error ? error.message : '회원가입 중 오류가 발생했습니다.'
-      );
+      console.error('회원가입 오류 발생');
+
+      // CORS 오류인 경우 특별한 메시지 표시
+      if (error instanceof Error && error.message.includes('CORS')) {
+        Alert.alert('네트워크 오류', '서버 연결에 문제가 있습니다. 잠시 후 다시 시도해주세요.');
+      } else {
+        Alert.alert(
+          '오류',
+          error instanceof Error ? error.message : '회원가입 중 오류가 발생했습니다.'
+        );
+      }
     } finally {
       setIsLoading(false);
     }

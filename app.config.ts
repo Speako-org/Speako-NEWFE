@@ -15,6 +15,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     backgroundColor: '#ffffff',
   },
   assetBundlePatterns: ['**/*'],
+  // 네트워크 연결 개선을 위한 설정
+  extra: {
+    eas: {
+      projectId: 'your-project-id',
+    },
+  },
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.anonymous.Speako',

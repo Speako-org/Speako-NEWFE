@@ -18,4 +18,10 @@ config.server = {
 // 웹 환경에서 import.meta 문제 해결을 위한 설정
 config.resolver.platforms = ['ios', 'android', 'native', 'web'];
 
+// 웹 환경에서 React Native 호환성 개선
+config.resolver.alias = {
+  ...config.resolver.alias,
+  'react-native$': 'react-native-web',
+};
+
 module.exports = withNativeWind(config, { input: './global.css' });

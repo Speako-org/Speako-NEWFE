@@ -1,10 +1,46 @@
 import { View, Text, Pressable, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
-
-const screenWidth = Dimensions.get('window').width;
+import { useState, useEffect } from 'react';
 
 const EmotionChart = () => {
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      setScreenWidth(Dimensions.get('window').width);
+    };
+
+    // 초기 화면 크기 설정
+    updateDimensions();
+
+    const subscription = Dimensions.addEventListener('change', updateDimensions);
+    return () => {
+      subscription?.remove();
+    };
+  }, []);
+
+  // 차트가 항상 표시되도록 안정적인 너비 설정
+  const chartWidth = Math.max(screenWidth - 40, 300);
+
+  // 차트 데이터
+  const chartData = {
+    labels: ['1월', '2월', '3월', '4월', '5월'],
+    datasets: [
+      {
+        data: [80, 45, 60, 20, 10],
+        color: (opacity = 1) => `rgba(160, 136, 224, ${opacity})`,
+        strokeWidth: 2,
+      },
+      {
+        data: [20, 70, 40, 80, 90],
+        color: (opacity = 1) => `rgba(255, 146, 138, ${opacity})`,
+        strokeWidth: 2,
+      },
+    ],
+    legend: [],
+  };
+
   return (
     <View className="mx-[20px]">
       {/* Header */}
@@ -17,25 +53,16 @@ const EmotionChart = () => {
       </View>
 
       {/* Chart Box */}
-      <View className="elevation-3 rounded-[15px] bg-white pb-[30px] shadow-sm">
+      <View
+        className="elevation-3 rounded-[15px] bg-white pb-[30px] shadow-sm"
+        style={{
+          minHeight: 220,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
         <LineChart
-          data={{
-            labels: ['1월', '2월', '3월', '4월', '5월'],
-            datasets: [
-              {
-                data: [80, 45, 60, 20, 10],
-                color: (opacity = 1) => `rgba(160, 136, 224, ${opacity})`,
-                strokeWidth: 2,
-              },
-              {
-                data: [20, 70, 40, 80, 90],
-                color: (opacity = 1) => `rgba(255, 146, 138, ${opacity})`,
-                strokeWidth: 2,
-              },
-            ],
-            legend: [],
-          }}
-          width={screenWidth - 40}
+          data={chartData}
+          width={chartWidth}
           height={220}
           chartConfig={{
             backgroundColor: '#fff',
@@ -65,6 +92,20 @@ const EmotionChart = () => {
           withDots={true}
           withShadow={false}
           bezier={false}
+          onDataPointClick={() => {}}
+          style={{
+            marginVertical: 8,
+            borderRadius: 12,
+          }}
+          fromZero={true}
+          yAxisSuffix=""
+          yAxisInterval={20}
+          segments={5}
+          getDotColor={(dataPoint, index) => {
+            if (index === 0) return 'rgba(160, 136, 224, 1)';
+            if (index === 1) return 'rgba(255, 146, 138, 1)';
+            return 'rgba(160, 136, 224, 1)';
+          }}
         />
       </View>
 

@@ -44,37 +44,58 @@ const LoginScreen = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({ email, password }),
       });
       if (response.ok) {
         const data = await response.json();
-        console.log('Login response:', data);
+        console.log('로그인 성공');
 
-        // 토큰이 응답 헤더에 있는 경우
-        const token = response.headers.get('Authorization')?.split(' ')[1] || data.accessToken;
+        // 토큰을 여러 방법으로 찾기
+        const token =
+          response.headers.get('Authorization')?.split(' ')[1] ||
+          data.result?.accessToken ||
+          data.accessToken ||
+          data.token ||
+          data.jwt ||
+          data.access_token ||
+          data.bearer;
 
         if (token) {
-          // Expo SecureStore에 저장 (암호화된 저장소)
-          await SecureStore.setItemAsync('accessToken', token);
-
-          // 웹 환경에서도 지원
-          if (typeof window !== 'undefined') {
-            // localStorage와 sessionStorage에 저장
+          // 플랫폼별 토큰 저장
+          if (Platform.OS === 'web') {
+            // 웹 환경
             localStorage.setItem('accessToken', token);
             sessionStorage.setItem('accessToken', token);
-
-            // 쿠키에도 저장
             document.cookie = `accessToken=${token}; path=/; SameSite=None; Secure`;
-
             console.log('토큰 저장에 성공하였습니다.');
+          } else {
+            // 모바일 환경
+            try {
+              await SecureStore.setItemAsync('accessToken', token);
+              console.log('토큰 저장에 성공하였습니다.');
+            } catch (secureStoreError) {
+              console.log('SecureStore 오류, localStorage 사용:', secureStoreError);
+              // 대안: localStorage 사용
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('accessToken', token);
+              }
+            }
           }
-        } else {
-          console.error('토큰이 없습니다.');
-        }
 
-        // 로그인 성공 시 홈 화면으로 이동
-        router.replace({ pathname: '/(protected)/(tabs)/home' });
+          // 로딩 상태 먼저 초기화
+          setIsLoading(false);
+
+          // 로그인 성공 시 바로 홈 화면으로 이동
+
+          router.push({ pathname: '/(protected)/(tabs)/home' });
+        } else {
+          console.log('토큰이 없습니다.');
+          Alert.alert('로그인 실패', '서버에서 인증 토큰을 받지 못했습니다.');
+          setIsLoading(false);
+          return;
+        }
       } else {
         const data = await response.json();
 
@@ -85,10 +106,8 @@ const LoginScreen = () => {
         } else {
           Alert.alert('로그인 실패', '아이디 또는 비밀번호를 확인해주세요.');
         }
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-      Alert.alert('오류', '로그인 중 문제가 발생했습니다.');
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +136,7 @@ const LoginScreen = () => {
 
       window.location.href = loginUrl;
     } catch (error) {
-      console.error('Kakao login error:', error);
+      console.log('Kakao login error');
       Alert.alert('오류', '로그인 중 문제가 발생했습니다.');
     } finally {
       setIsLoading(false);

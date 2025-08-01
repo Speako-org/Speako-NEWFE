@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, View, ScrollView } from 'react-native';
+import { ActivityIndicator, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Entypo } from '@expo/vector-icons';
-import Svg, { Circle } from 'react-native-svg';
+import { Svg, Circle } from 'react-native-svg';
 import CircleChart from '~/components/CircleChart/CircleChart';
+import * as SecureStore from 'expo-secure-store';
 
 type RecordType = {
   id: string;
@@ -43,7 +44,16 @@ export default function RecordDetail() {
   useEffect(() => {
     const fetchAnalysis = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/analyses/1`); // 임시로 1값
+        const accessToken = await SecureStore.getItemAsync('accessToken');
+
+        const response = await fetch(`${BASE_URL}/analyses/10`, {
+          // 임시값 10
+          method: 'GET',
+          headers: {
+            accept: '*/*',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         const data = await response.json();
         setAnalysis(data.result);
       } catch (error) {
@@ -70,7 +80,12 @@ export default function RecordDetail() {
   if (!analysis) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <Text className="text-red-500">분석 데이터를 불러올 수 없습니다.</Text>
+        <Text className="mb-4 text-red-500">분석 데이터를 불러올 수 없습니다.</Text>
+        <TouchableOpacity
+          onPress={() => router.push('/(protected)/record')}
+          className="rounded-lg bg-[#888888] px-5 py-3">
+          <Text className="text-white">이전 페이지로 돌아가기</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -83,7 +98,11 @@ export default function RecordDetail() {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* 헤더 */}
         <View className="mb-[25px] flex-row items-center justify-between">
-          <Entypo name="chevron-thin-left" size={18} onPress={() => router.back()} />
+          <Entypo
+            name="chevron-thin-left"
+            size={18}
+            onPress={() => router.push('/(protected)/record')}
+          />
           <Text className="text-[18px] font-bold">{recordData.title}</Text>
           <Text>{recordData.duration}</Text>
         </View>

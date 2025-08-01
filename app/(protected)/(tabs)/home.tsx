@@ -5,6 +5,7 @@ import { formatDateTime } from '../../../utils/formatDataTime';
 import { formatTime } from '../../../utils/formatTime';
 import RecordButton from '../../../components/RecordButton/RecordButton';
 import * as FileSystem from 'expo-file-system';
+import * as SecureStore from 'expo-secure-store';
 
 export default function Home() {
   const [recording, setRecording] = useState(false);
@@ -112,7 +113,11 @@ export default function Home() {
   };
 
   const getFileNameFromUri = (uri: string) => {
-    return uri.split('/').pop() ?? `audio-${Date.now()}.m4a`;
+    const name = uri.split('/').pop();
+    if (!name) return `audio-${Date.now()}.m4a`; // 기본값
+
+    // 확장자 없으면 기본 확장자 추가
+    return name.includes('.') ? name : `${name}.m4a`;
   };
 
   useEffect(() => {
@@ -140,20 +145,30 @@ export default function Home() {
   };
 
   const getPresignedUrl = async (
-    fileName: string
+    fileName: string,
+    recordId?: number | null
   ): Promise<{ uploadUrl: string; recordId: number } | null> => {
     try {
-      const url = `${BASE_URL}/records/presigned-url?fileName=${encodeURIComponent(fileName)}`;
+      const accessToken = await SecureStore.getItemAsync('accessToken');
+      // console.log('📍 토큰', accessToken);
+
+      const queryParams = recordId
+        ? `recordId=${recordId}&fileName=${encodeURIComponent(fileName)}`
+        : `fileName=${encodeURIComponent(fileName)}`;
+
+      const url = `${BASE_URL}/records/presigned-url?${queryParams}`;
       console.log('😀 Request URL:', url);
 
       const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       const rawBody = await response.text();
       const data = JSON.parse(rawBody);
-      console.log('응답 상태:', response.status);
       console.log('Presigned URL 응답:', data);
 
       return { uploadUrl: data.result.presignedUrl, recordId: data.result.recordId };
@@ -166,7 +181,6 @@ export default function Home() {
 
   const uploadToS3 = async (uri: string, uploadUrl: string): Promise<boolean> => {
     try {
-      // console.log('uploadUrl:', uploadUrl);
       const uploadResponse = await FileSystem.uploadAsync(uploadUrl, uri, {
         httpMethod: 'PUT',
         headers: {
@@ -193,13 +207,15 @@ export default function Home() {
     endTime: string
   ) => {
     try {
+      const accessToken = await SecureStore.getItemAsync('accessToken');
+
       const queryParams = new URLSearchParams({
         recordS3Path: fileUrl,
         startTime,
         endTime,
       });
 
-      console.log('recordId??', recordId);
+      console.log('recordId: ', recordId);
       const url = `${BASE_URL}/records/${recordId}/transcriptions?${queryParams.toString()}`;
       console.log('😀 STT 요청 URL:', url);
 
@@ -207,6 +223,7 @@ export default function Home() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -227,9 +244,8 @@ export default function Home() {
 
     setIsUploading(true);
     const fileName = getFileNameFromUri(recordedUri);
-    const presigned = await getPresignedUrl(fileName);
-
-    // console.log('업로드함수: ', presigned);
+    console.log('fileName', fileName);
+    const presigned = await getPresignedUrl(fileName, recordId);
 
     if (!presigned || !presigned.uploadUrl) {
       Alert.alert('오류', '유효한 업로드 URL이 없습니다.');
@@ -246,10 +262,11 @@ export default function Home() {
 
       // 'voice/...' 부분만 추출
       const recordS3Path = fileUrl.split('.com/')[1];
+      console.log('voice 이후 경로: ', recordS3Path);
 
       const formattedStartTime = toCustomISOString(recordStartTime ?? new Date()); // 날짜 형식 'YYYY-MM-DDTHH:MM:SS.000000'
       const formattedEndTime = toCustomISOString(recordEndTime ?? new Date());
-      console.log(formattedStartTime, formattedEndTime);
+      console.log('시작시간, 끝나는시간', formattedStartTime, formattedEndTime);
       await requestTranscription(
         presigned.recordId,
         recordS3Path,

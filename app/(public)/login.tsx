@@ -66,20 +66,24 @@ const LoginScreen = () => {
           // 플랫폼별 토큰 저장
           if (Platform.OS === 'web') {
             // 웹 환경
-            localStorage.setItem('accessToken', token);
-            sessionStorage.setItem('accessToken', token);
-            document.cookie = `accessToken=${token}; path=/; SameSite=None; Secure`;
-            console.log('토큰 저장에 성공하였습니다.');
+            if (rememberMe) {
+              localStorage.setItem('accessToken', token);
+              sessionStorage.setItem('accessToken', token);
+              document.cookie = `accessToken=${token}; path=/; SameSite=None; Secure`;
+              console.log('토큰 저장에 성공하였습니다.');
+            }
           } else {
             // 모바일 환경
-            try {
-              await SecureStore.setItemAsync('accessToken', token);
-              console.log('토큰 저장에 성공하였습니다.');
-            } catch (secureStoreError) {
-              console.log('SecureStore 오류, localStorage 사용:', secureStoreError);
-              // 대안: localStorage 사용
-              if (typeof window !== 'undefined') {
-                localStorage.setItem('accessToken', token);
+            if (rememberMe) {
+              try {
+                await SecureStore.setItemAsync('accessToken', token);
+                console.log('토큰 저장에 성공하였습니다.');
+              } catch (secureStoreError) {
+                console.log('SecureStore 오류, localStorage 사용:', secureStoreError);
+                // 대안: localStorage 사용
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem('accessToken', token);
+                }
               }
             }
           }
@@ -253,20 +257,20 @@ const LoginScreen = () => {
                 </View>
               </View>
             </View>
-            <View className="-mt-10 mb-10">
+            <View className="-mt-10 mb-8">
               <View className="mb-5 flex-row items-center">
                 <View className="h-px flex-1 bg-gray-200" />
                 <Text className="mx-2.5 text-sm text-gray-400">간편 로그인</Text>
                 <View className="h-px flex-1 bg-gray-200" />
               </View>
               <TouchableOpacity
-                className="h-14 flex-row items-center justify-center rounded-lg bg-[#FEE500]"
+                className="h-16 flex-row items-center justify-center rounded-xl bg-[#FEE500]"
                 onPress={handleKakaoLogin}>
                 <Image
                   source={require('../../assets/pngwing.com.png')}
                   style={{ width: 18, height: 18, marginRight: 10 }}
                 />
-                <Text className="text-sm font-semibold text-gray-700">카카오로 로그인</Text>
+                <Text className="text-m font-semibold text-gray-700">카카오로 로그인</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Entypo } from '@expo/vector-icons';
-import Svg, { Circle } from 'react-native-svg';
 import CircleChart from '~/components/CircleChart/CircleChart';
 
 type RecordType = {

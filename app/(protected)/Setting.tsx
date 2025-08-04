@@ -1,6 +1,7 @@
 import { Text, View, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 
 export default function Setting() {
   const router = useRouter();
@@ -132,7 +133,10 @@ export default function Setting() {
               {
                 text: '확인',
                 style: 'destructive',
-                onPress: () => router.replace({ pathname: '/(public)/login' }),
+                onPress: async () => {
+                  await SecureStore.deleteItemAsync('accessToken');
+                  router.replace({ pathname: '/(public)/login' });
+                },
               },
             ]);
           }}>

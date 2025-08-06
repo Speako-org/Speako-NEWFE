@@ -1,15 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, View, ScrollView } from 'react-native';
+import { ActivityIndicator, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Entypo } from '@expo/vector-icons';
 import CircleChart from '~/components/CircleChart/CircleChart';
-
-type RecordType = {
-  id: string;
-  title: string;
-  date: string;
-  duration: string;
-};
+import * as SecureStore from 'expo-secure-store';
 
 type AnalysisResult = {
   transcriptionId: number;
@@ -30,8 +24,7 @@ type AnalysisResult = {
 
 export default function RecordDetail() {
   const router = useRouter();
-  const { record } = useLocalSearchParams<{ record: string }>();
-  const recordData: RecordType = JSON.parse(record);
+  const { id } = useLocalSearchParams<{ id: string }>();
 
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,9 +33,18 @@ export default function RecordDetail() {
 
   // 분석 데이터
   useEffect(() => {
+    if (!id) return;
+
     const fetchAnalysis = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/analyses/1`); // 임시로 1값
+        const accessToken = await SecureStore.getItemAsync('accessToken');
+        const response = await fetch(`${BASE_URL}/transcription/${id}/analyses`, {
+          method: 'GET',
+          headers: {
+            accept: '*/*',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         const data = await response.json();
         setAnalysis(data.result);
       } catch (error) {
@@ -53,14 +55,12 @@ export default function RecordDetail() {
     };
 
     fetchAnalysis();
-  }, []);
-
-  console.log(analysis?.thumbnailText);
+  }, [id]);
 
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#D94B44" />
+        <ActivityIndicator size="large" color="#8962C8" />
         <Text className="mt-2 text-gray-500">분석 결과를 불러오는 중...</Text>
       </View>
     );
@@ -80,11 +80,12 @@ export default function RecordDetail() {
       <View className="absolute bottom-0 h-[111px] w-full bg-white" />
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* 헤더 */}
-        <View className="mb-[25px] flex-row items-center justify-between">
-          <Entypo name="chevron-thin-left" size={18} onPress={() => router.back()} />
-          <Text className="text-[18px] font-bold">{recordData.title}</Text>
-          <Text>{recordData.duration}</Text>
+        <View className="relative z-10 mb-[25px] flex-row items-center justify-center">
+          <TouchableOpacity onPress={() => router.back()} className="absolute left-0 z-20">
+            <Entypo name="chevron-thin-left" size={20} />
+          </TouchableOpacity>
+
+          <Text className="flex-1 text-center text-[18px] font-bold">{analysis.title}</Text>
         </View>
 
         {/* 음성 인식 결과 */}
@@ -132,16 +133,22 @@ export default function RecordDetail() {
           {/* 구분선 */}
           <View className="my-[15px] h-[1px] bg-[#ddd]" />
 
-          <Text className="mx-[4px] text-[14px] font-semibold">발견된 부정적 표현</Text>
-          <View className="mt-[5px] flex-row flex-wrap">
-            {['못하니까', '실망', '긴장'].map((tag, idx) => (
-              <Text
-                key={idx}
-                className="mr-[5.5px] mt-[3px] rounded-full bg-[#ffe9e9] px-[10px] py-[5px] text-[12px]">
-                {tag}
-              </Text>
-            ))}
-          </View>
+          <Text className="mx-[2px] text-[14px] font-semibold">발견된 부정적 표현</Text>
+          {!analysis.negativeWordsTop3 || analysis.negativeWordsTop3.length === 0 ? (
+            <Text className="mx-[2px] mt-[5px] text-[12px] text-[#888]">
+              발견된 부정적 표현이 없습니다.
+            </Text>
+          ) : (
+            <View className="mt-[5px] flex-row flex-wrap">
+              {analysis.negativeWordsTop3.map((tag, idx) => (
+                <Text
+                  key={idx}
+                  className="mr-[5.5px] mt-[3px] rounded-full bg-[#ffe9e9] px-[10px] py-[5px] text-[12px]">
+                  {tag}
+                </Text>
+              ))}
+            </View>
+          )}
         </View>
 
         {/* 개선 추이 */}
@@ -152,8 +159,16 @@ export default function RecordDetail() {
 
         <View className="mb-[20px] mt-[5px] rounded-[10px] border border-[#e2e2e2] px-[10px] py-[15px]">
           {[
-            { label: '1주 전', percent: 90, text: '90% 부정' },
-            { label: '현재', percent: 35, text: '35% 부정' },
+            {
+              label: '1주 전',
+              percent: Math.round(analysis.dailyRatioOfRecent7Days[0]?.avgNegativeRatio || 0),
+              text: `${Math.round(analysis.dailyRatioOfRecent7Days[0]?.avgNegativeRatio || 0)}% 부정`,
+            },
+            {
+              label: '현재',
+              percent: Math.round(analysis.dailyRatioOfRecent7Days[6]?.avgNegativeRatio || 0),
+              text: `${Math.round(analysis.dailyRatioOfRecent7Days[6]?.avgNegativeRatio || 0)}% 부정`,
+            },
           ].map((item, idx) => (
             <View key={idx} className="flex-row items-center justify-between py-[5px]">
               <Text className="w-[60px] pl-[8px] text-[12px]">{item.label}</Text>
